@@ -28,6 +28,13 @@ def _slugify(text: str) -> str:
     text = text.strip('-')
     return text or 'foto'
 
+from pathlib import Path
+
+# Setup paths for Vercel/Production
+BASE_DIR = Path(__file__).resolve().parent
+STATIC_DIR = BASE_DIR / "static"
+TEMPLATES_DIR = BASE_DIR / "templates"
+
 app = FastAPI(title="GMB Photo Sanitizer", version="1.0.0")
 
 from starlette.middleware.cors import CORSMiddleware
@@ -39,10 +46,8 @@ app.add_middleware(
     expose_headers=["X-GMB-Processed", "X-GMB-Total", "X-GMB-Errors", "Content-Disposition"],
 )
 
-os.makedirs("static", exist_ok=True)
-os.makedirs("templates", exist_ok=True)
-app.mount("/static", StaticFiles(directory="static"), name="static")
-templates = Jinja2Templates(directory="templates")
+app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
+templates = Jinja2Templates(directory=str(TEMPLATES_DIR))
 
 @app.get("/")
 async def home(request: Request):
