@@ -1,0 +1,313 @@
+:root {
+    --bg: #0f0f1a;
+    --surface: #1a1a2e;
+    --surface2: #22223a;
+    --border: #2d2d4a;
+    --text: #e0e0f0;
+    --text-dim: #8888aa;
+    --accent: #6c5ce7;
+    --accent2: #a29bfe;
+    --success: #00b894;
+    --danger: #ff6b6b;
+    --radius: 12px
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0
+}
+
+body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    min-height: 100vh
+}
+
+.app {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem 4rem
+}
+
+header {
+    text-align: center;
+    margin-bottom: 2rem
+}
+
+header h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: .3rem
+}
+
+.subtitle {
+    color: var(--text-dim);
+    font-size: .95rem
+}
+
+.card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem
+}
+
+.card h2 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: .4rem;
+    color: var(--accent2)
+}
+
+.step-desc {
+    font-size: .85rem;
+    color: var(--text-dim);
+    margin-bottom: 1rem;
+    line-height: 1.5
+}
+
+.form-row {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap
+}
+
+.form-group {
+    flex: 1;
+    min-width: 180px
+}
+
+.form-group.flex-2 {
+    flex: 2
+}
+
+.form-group.flex-3 {
+    flex: 3
+}
+
+label {
+    display: block;
+    font-size: .85rem;
+    color: var(--text-dim);
+    margin-bottom: .35rem;
+    font-weight: 500
+}
+
+.required {
+    color: var(--danger)
+}
+
+input[type="text"],
+input[type="number"],
+input[type="date"],
+select {
+    width: 100%;
+    padding: .6rem .8rem;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-size: .9rem;
+    outline: none;
+    transition: border-color .2s
+}
+
+input:focus,
+select:focus {
+    border-color: var(--accent)
+}
+
+input[type="checkbox"] {
+    accent-color: var(--accent);
+    margin-right: .4rem
+}
+
+details.manual-coords {
+    margin-top: .5rem
+}
+
+details summary {
+    cursor: pointer;
+    color: var(--accent2);
+    font-size: .85rem;
+    margin-bottom: .8rem
+}
+
+.dropzone {
+    position: relative;
+    border: 2px dashed var(--border);
+    border-radius: var(--radius);
+    padding: 2.5rem 1rem;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color .2s, background .2s
+}
+
+.dropzone:hover,
+.dropzone.dragover {
+    border-color: var(--accent);
+    background: rgba(108, 92, 231, .05)
+}
+
+.dropzone input[type="file"] {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer
+}
+
+.dropzone-icon {
+    font-size: 2.5rem;
+    display: block;
+    margin-bottom: .5rem
+}
+
+.dropzone p {
+    margin: 0
+}
+
+.hint {
+    font-size: .8rem;
+    color: var(--text-dim);
+    margin-top: .3rem
+}
+
+.file-list {
+    margin-top: .8rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5rem
+}
+
+.file-tag {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: .25rem .6rem;
+    font-size: .8rem;
+    color: var(--accent2)
+}
+
+.location-preview {
+    margin-top: .8rem;
+    padding: .6rem .8rem;
+    background: rgba(0, 184, 148, .1);
+    border: 1px solid rgba(0, 184, 148, .3);
+    border-radius: 8px;
+    font-size: .85rem;
+    color: var(--success)
+}
+
+.btn-primary {
+    display: block;
+    width: 100%;
+    padding: 1rem;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius);
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background .2s, opacity .2s;
+    margin-bottom: 1.5rem
+}
+
+.btn-primary:hover:not(:disabled) {
+    background: #5a4bd1
+}
+
+.btn-primary:disabled {
+    opacity: .4;
+    cursor: not-allowed
+}
+
+.progress {
+    text-align: center;
+    padding: 2rem
+}
+
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    margin: 0 auto 1rem;
+    animation: spin .8s linear infinite
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg)
+    }
+}
+
+.status-msg {
+    padding: 1rem 1.2rem;
+    border-radius: var(--radius);
+    font-size: .95rem;
+    margin-bottom: 1.5rem;
+    font-weight: 500;
+    line-height: 1.5
+}
+
+.status-success {
+    background: rgba(0, 184, 148, .12);
+    border: 1px solid rgba(0, 184, 148, .4);
+    color: #00d9a0
+}
+
+.status-error {
+    background: rgba(255, 107, 107, .12);
+    border: 1px solid rgba(255, 107, 107, .4);
+    color: #ff8a8a
+}
+
+.verify-section {
+    margin-top: 1rem;
+    border-color: var(--surface2)
+}
+
+.verify-section input[type="file"] {
+    margin: .5rem 0
+}
+
+.verify-result {
+    margin-top: 1rem;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1rem;
+    font-size: .8rem;
+    max-height: 400px;
+    overflow-y: auto;
+    white-space: pre-wrap;
+    word-break: break-all;
+    display: none
+}
+
+@media(max-width:600px) {
+    .app {
+        padding: 1rem
+    }
+
+    .form-row {
+        flex-direction: column
+    }
+
+    .form-group {
+        min-width: 100%
+    }
+
+    header h1 {
+        font-size: 1.5rem
+    }
+}

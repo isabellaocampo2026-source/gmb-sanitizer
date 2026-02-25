@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GMB Photo Sanitizer</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+    <div class="app">
+        <header>
+            <h1>📸 GMB Photo Sanitizer</h1>
+            <p class="subtitle">Limpia metadata · Inyecta EXIF colombiano · Hace únicas tus fotos</p>
+        </header>
+
+        <div id="statusMsg" class="status-msg" style="display:none;"></div>
+
+        <form id="sanitizeForm" enctype="multipart/form-data">
+            <section class="card">
+                <h2>1. Subir fotos</h2>
+                <p class="step-desc">Selecciona las imágenes que quieres sanitizar. Se descargarán en un ZIP con las
+                    fotos ya limpias.</p>
+                <div class="dropzone" id="dropzone">
+                    <input type="file" id="fileInput" name="files" multiple accept="image/*">
+                    <div class="dropzone-content">
+                        <span class="dropzone-icon">📁</span>
+                        <p>Arrastra fotos aquí o <strong>haz clic para seleccionar</strong></p>
+                        <p class="hint">JPG, PNG, WebP — múltiples archivos</p>
+                    </div>
+                </div>
+                <div id="fileList" class="file-list"></div>
+            </section>
+
+            <section class="card">
+                <h2>2. Ubicación del negocio</h2>
+                <p class="step-desc">Elige la ciudad donde está el negocio. La EXIF se inyectará con coordenadas de esa
+                    zona.</p>
+                <div class="form-row">
+                    <div class="form-group flex-2">
+                        <label for="city">Ciudad <span class="required">*</span></label>
+                        <select id="city" name="city">
+                            <option value="">— Selecciona ciudad —</option>
+                            {% for c in cities %}
+                            <option value="{{ c }}">{{ c }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group flex-3">
+                        <label for="address">Dirección (opcional)</label>
+                        <input type="text" id="address" name="address" placeholder="Cra 7 #45-12, Chapinero">
+                    </div>
+                </div>
+                <details class="manual-coords">
+                    <summary>⚙️ Coordenadas manuales (avanzado)</summary>
+                    <div class="form-row">
+                        <div class="form-group"><label>Latitud</label><input type="text" name="manual_lat"
+                                placeholder="4.6097"></div>
+                        <div class="form-group"><label>Longitud</label><input type="text" name="manual_lon"
+                                placeholder="-74.0817"></div>
+                        <div class="form-group"><label>Altitud (m)</label><input type="text" name="manual_alt"
+                                placeholder="2640"></div>
+                        <div class="form-group"><label>Código postal</label><input type="text" name="postal_code"
+                                placeholder="110111"></div>
+                    </div>
+                </details>
+                <div id="locationPreview" class="location-preview" style="display:none;"><span id="locText"></span>
+                </div>
+            </section>
+
+            <section class="card">
+                <h2>3. Palabra clave SEO</h2>
+                <p class="step-desc">Escribe la keyword principal del negocio. Se usará para nombrar los archivos y se
+                    inyectará en la metadata EXIF de las fotos.</p>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="keyword">Palabra clave</label>
+                        <input type="text" id="keyword" name="keyword" placeholder="Ej: agencia de marketing digital">
+                        <span class="hint" id="keywordPreview"></span>
+                    </div>
+                </div>
+            </section>
+
+            <section class="card">
+                <h2>4. Opciones</h2>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="device_id">Dispositivo simulado</label>
+                        <select id="device_id" name="device_id">
+                            <option value="random">🎲 Aleatorio</option>
+                            {% for d in devices %}
+                            <option value="{{ d.id }}">{{ d.label }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label><input type="checkbox" id="randomPerPhoto" name="random_device_per_photo" value="true"
+                                checked> Dispositivo distinto por foto</label>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="intensity">Intensidad de transformación</label>
+                        <select id="intensity" name="intensity">
+                            <option value="low">🟢 Baja — cambios mínimos</option>
+                            <option value="medium" selected>🟡 Media — recomendada</option>
+                            <option value="high">🔴 Alta — máxima diferencia</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="jitter_radius">Radio GPS (metros)</label>
+                        <input type="number" id="jitter_radius" name="jitter_radius" value="30" min="1" max="200">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="date_from">Fecha desde</label>
+                        <input type="date" id="date_from" name="date_from">
+                        <span class="hint">Las fotos tendrán fechas aleatorias entre estas dos fechas, simulando que
+                            fueron tomadas en días distintos.</span>
+                    </div>
+                    <div class="form-group">
+                        <label for="date_to">Fecha hasta</label>
+                        <input type="date" id="date_to" name="date_to">
+                    </div>
+                </div>
+            </section>
+
+            <button type="submit" id="submitBtn" class="btn-primary" disabled>
+                🚀 Sanitizar fotos y descargar ZIP
+            </button>
+        </form>
+
+        <div id="progress" class="progress" style="display:none;">
+            <div class="spinner"></div>
+            <p id="progressText">Procesando fotos...</p>
+        </div>
+
+        <section class="card verify-section">
+            <h2>🔍 Verificar foto procesada</h2>
+            <p class="hint">Sube una foto ya sanitizada para confirmar que tiene la EXIF inyectada correctamente.</p>
+            <input type="file" id="verifyInput" accept="image/*">
+            <pre id="verifyResult" class="verify-result"></pre>
+        </section>
+    </div>
+    <script src="/static/app.js"></script>
+</body>
+
+</html>
