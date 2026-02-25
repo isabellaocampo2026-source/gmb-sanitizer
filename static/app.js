@@ -147,7 +147,14 @@ document.addEventListener('DOMContentLoaded', () => {
             const resp = await fetch('/api/sanitize', { method: 'POST', body: formData });
 
             if (!resp.ok) {
-                let errorMsg = 'Error del servidor';
+                if (resp.status === 413) {
+                    throw new Error('Las fotos son demasiado grandes para Vercel (límite 4.5MB). Intenta con fotos de menor resolución.');
+                }
+                if (resp.status === 504) {
+                    throw new Error('Tiempo de espera agotado. Vercel tardó demasiado en procesar. Intenta subir menos fotos a la vez.');
+                }
+
+                let errorMsg = `Error del servidor (${resp.status})`;
                 try {
                     const err = await resp.json();
                     errorMsg = err.detail || errorMsg;

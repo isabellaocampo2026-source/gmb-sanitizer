@@ -20,8 +20,8 @@ def uniquify_image(image, intensity="medium"):
     cl, ct, cr, cb = random.randint(0, s["crop_px"]), random.randint(0, s["crop_px"]), random.randint(0, s["crop_px"]), random.randint(0, s["crop_px"])
     if w - cl - cr > 200 and h - ct - cb > 200:
         img = img.crop((cl, ct, w - cr, h - cb))
-    arr = np.array(img, dtype=np.float64)
-    noise = np.random.normal(0, s["noise_sigma"], arr.shape)
+    arr = np.array(img, dtype=np.float32)
+    noise = np.random.normal(0, s["noise_sigma"], arr.shape).astype(np.float32)
     arr += noise
     for c in range(min(3, arr.shape[2])):
         arr[:, :, c] += random.uniform(-s["color_shift"], s["color_shift"])
